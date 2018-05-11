@@ -74,7 +74,12 @@ class EC2(Service):
             fill_value=0
         )
         # df_stats = pd.DataFrame(grouped, columns=['onDemand'])
-        df_stats.loc[:, 'reserved'] = 0
+        try:
+            index = list(df_stats.columns).index('on-daemon')
+        except ValueError:
+            df_stats.loc[:, 'reserved'] = 0
+        else:
+            df_stats.insert(index+1, 'reserved', 0)
         async for result in self.concurrent(self.get_reserved_instances):
             for region, typ, count in result:
                 df_stats.loc[(region, typ), 'reserved'] += count
