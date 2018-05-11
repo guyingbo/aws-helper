@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 "aioboto3" = "*"
 pandas = "*"
+click = "*"
 
 [dev-packages]
 

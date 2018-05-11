@@ -12,7 +12,7 @@ $ pipenv shell
 
 EC2 managment:
 
-When you run `$ python3 helper.py`, you can get some output like this (example values already randomized):
+When you run `$ python3 helper.py ec2 show`, you can get some output like this (example values already randomized):
 
 ~~~
 lifecycle                  emr-on-demand  emr-spot  on-demand  spot  reserved
