@@ -75,7 +75,7 @@ class EC2(Service):
         )
         # df_stats = pd.DataFrame(grouped, columns=['onDemand'])
         try:
-            index = list(df_stats.columns).index('on-daemon')
+            index = list(df_stats.columns).index('on-demand')
         except ValueError:
             df_stats.loc[:, 'reserved'] = 0
         else:
