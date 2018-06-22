@@ -30,7 +30,11 @@ class EC2(Service):
     async def get_reserved_instances(self, ec2):
         result = []
         response = await ec2.describe_reserved_instances(
-            Filters=[{'Name': 'state', 'Values': ['active']}])
+            Filters=[{
+                'Name': 'state',
+                'Values': ['active']
+            }]
+        )
         for inst in response['ReservedInstances']:
             result.append((
                 ec2.meta.region_name,
@@ -42,9 +46,12 @@ class EC2(Service):
     async def get_ec2_instances(self, ec2):
         instances = []
         paginator = ec2.get_paginator('describe_instances')
-        async for response in paginator.paginate(Filters=[
-                {'Name': 'instance-state-name', 'Values': ['running', 'stopped']}
-        ]):
+        async for response in paginator.paginate(
+            Filters=[{
+                'Name': 'instance-state-name',
+                'Values': ['running', 'stopped']
+            }]
+        ):
             reservations = response['Reservations']
             for res in reservations:
                 instances.extend(res['Instances'])
