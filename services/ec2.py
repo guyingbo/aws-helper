@@ -40,13 +40,14 @@ class EC2(Service):
         return result
 
     async def get_ec2_instances(self, ec2):
-        response = await ec2.describe_instances(Filters=[
-            {'Name': 'instance-state-name', 'Values': ['running', 'stopped']}
-        ])
-        reservations = response['Reservations']
         instances = []
-        for res in reservations:
-            instances.extend(res['Instances'])
+        paginator = ec2.get_paginator('describe_instances')
+        async for response in paginator.paginate(Filters=[
+                {'Name': 'instance-state-name', 'Values': ['running', 'stopped']}
+        ]):
+            reservations = response['Reservations']
+            for res in reservations:
+                instances.extend(res['Instances'])
         return instances
 
     async def show(self):
