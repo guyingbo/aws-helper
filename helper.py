@@ -14,7 +14,7 @@ def ec2():
     pass
 
 
-@ec2.command(name='show')
+@ec2.command(name="show")
 def ec2_show():
     ec2 = EC2()
     run(ec2.show())
@@ -25,13 +25,16 @@ def rds():
     pass
 
 
-@rds.command(name='show')
-@click.option('--columns', default='region,proj,engine,type',
-              help='valid columns: region, proj, engine, type, id')
+@rds.command(name="show")
+@click.option(
+    "--columns",
+    default="region,proj,engine,type",
+    help="valid columns: region, proj, engine, type, id",
+)
 def rds_show(columns):
-    columns = columns.split(',')
+    columns = columns.split(",")
     if not columns:
-        columns = ('region', 'proj', 'engine', 'type')
+        columns = ("region", "proj", "engine", "type")
     rds = RDS()
     run(rds.show(columns))
 
@@ -43,5 +46,5 @@ def run(coro):
     loop.close()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cli()
