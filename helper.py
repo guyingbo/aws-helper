@@ -26,12 +26,14 @@ def rds():
 
 
 @rds.command(name='show')
-@click.argument('fields', nargs=-1)
-def rds_show(fields):
-    if not fields:
-        fields = ('region', 'proj', 'engine', 'type')
+@click.option('--columns', default='region,proj,engine,type',
+              help='valid columns: region, proj, engine, type, id')
+def rds_show(columns):
+    columns = columns.split(',')
+    if not columns:
+        columns = ('region', 'proj', 'engine', 'type')
     rds = RDS()
-    run(rds.show(fields))
+    run(rds.show(columns))
 
 
 def run(coro):
