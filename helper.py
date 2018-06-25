@@ -26,9 +26,12 @@ def rds():
 
 
 @rds.command(name='show')
-def rds_show():
+@click.argument('fields', nargs=-1)
+def rds_show(fields):
+    if not fields:
+        fields = ('region', 'proj', 'engine', 'type')
     rds = RDS()
-    run(rds.show())
+    run(rds.show(fields))
 
 
 def run(coro):

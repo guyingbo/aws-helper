@@ -20,20 +20,25 @@ class RDS(Service):
                 db_instances.append(db_instance)
         return rds.meta.region_name, db_instances
 
-    async def show(self):
+    async def show(self, columns):
+        assert len(columns) > 0
+        valid_columns = set(['region', 'proj', 'engine', 'type', 'id'])
+        columns = list(filter(lambda c: c in valid_columns, columns))
         instances = []
         try:
             async for region, db_instances in self.concurrent(self.get_instances):
                 for inst in db_instances:
-                    instances.append((
-                        region,
-                        inst['Project'],
-                        inst['Engine'],
-                        inst['DBInstanceClass'],
-                        inst['DBInstanceIdentifier'],
-                    ))
+                    d = {
+                        'region': region,
+                        'proj': inst['Project'],
+                        'engine': inst['Engine'],
+                        'type': inst['DBInstanceClass'],
+                        'id': inst['DBInstanceIdentifier'],
+                    }
+                    tup = tuple([d[column] for column in columns])
+                    instances.append(tup)
             df_db_instances = pd.DataFrame(
-                instances, columns=['region', 'proj', 'engine', 'type', 'id'])
+                instances, columns=columns)
             print(df_db_instances.groupby(list(df_db_instances.columns)).size())
         finally:
             await self.close()
