@@ -11,9 +11,7 @@ class CloudWatch(Service):
         resp = await client.get_metric_statistics(
             Namespace="AWS/ElastiCache",
             MetricName="FreeableMemory",
-            Dimensions=[
-                {"Name": "CacheClusterId", "Value": "redis-cluster"},
-            ],
+            Dimensions=[{"Name": "CacheClusterId", "Value": "redis-cluster"}],
             StartTime=datetime.utcnow() - timedelta(seconds=300),
             EndTime=datetime.utcnow() + timedelta(seconds=120),
             Period=60,

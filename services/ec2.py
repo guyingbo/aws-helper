@@ -2,24 +2,24 @@ from .base import Service
 import pandas as pd
 
 
-def get_tags(inst):
+def get_tags(inst: dict):
     return {dic["Key"]: dic["Value"] for dic in inst.get("Tags", {})}
 
 
-def get_tag(inst, key):
+def get_tag(inst: dict, key: str):
     tags = get_tags(inst)
     return tags.get(key, "")
 
 
-def get_region(inst):
+def get_region(inst: dict):
     return inst["Placement"]["AvailabilityZone"][:-1]
 
 
-def is_emr(inst):
+def is_emr(inst: dict):
     return any("aws:elasticmapreduce" in key for key in get_tags(inst))
 
 
-def get_lifecycle(inst):
+def get_lifecycle(inst: dict):
     emr = "emr-" if is_emr(inst) else ""
     return emr + inst.get("InstanceLifecycle", "on-demand")
 

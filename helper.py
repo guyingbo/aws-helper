@@ -31,10 +31,10 @@ def rds():
     default="region,proj,engine,type",
     help="valid columns: region, proj, engine, type, id",
 )
-def rds_show(columns):
+def rds_show(columns: str):
     columns = columns.split(",")
     if not columns:
-        columns = ("region", "proj", "engine", "type")
+        columns = ["region", "proj", "engine", "type"]
     rds = RDS()
     run(rds.show(columns))
 

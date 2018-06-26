@@ -20,7 +20,7 @@ class RDS(Service):
                 db_instances.append(db_instance)
         return rds.meta.region_name, db_instances
 
-    async def show(self, columns):
+    async def show(self, columns: list):
         assert len(columns) > 0
         valid_columns = set(["region", "proj", "engine", "type", "id"])
         columns = list(filter(lambda c: c in valid_columns, columns))
