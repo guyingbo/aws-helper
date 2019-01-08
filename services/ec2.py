@@ -86,6 +86,9 @@ class EC2(Service):
             df_stats.insert(index + 1, "reserved", 0)
         async for result in self.concurrent(self.get_reserved_instances):
             for region, typ, count in result:
-                df_stats.loc[(region, typ), "reserved"] += count
+                try:
+                    df_stats.loc[(region, typ), "reserved"] += count
+                except KeyError:
+                    df_stats.loc[(region, typ), "reserved"] = 1
         print(df_stats.to_string())
         await self.close()
