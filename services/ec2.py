@@ -1,3 +1,4 @@
+# from tabulate import tabulate
 from .base import Service
 import pandas as pd
 
@@ -49,6 +50,15 @@ class EC2(Service):
                 instances.extend(res["Instances"])
         return instances
 
+    async def _list_vpcs(self, ec2):
+        resp = await ec2.describe_vpcs()
+        return resp['Vpcs']
+
+    async def list_vpcs(self):
+        async for vpcs in self.concurrent(self._list_vpcs):
+            for vpc in vpcs:
+                print(vpc['CidrBlock'], get_tag(vpc, 'Name'))
+
     async def show(self):
         instances = []
         async for insts in self.concurrent(self.get_ec2_instances):
@@ -91,4 +101,4 @@ class EC2(Service):
                 except KeyError:
                     df_stats.loc[(region, typ), "reserved"] = 1
         print(df_stats.to_string())
-        await self.close()
+        # print(tabulate(df_stats))

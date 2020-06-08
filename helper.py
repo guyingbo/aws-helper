@@ -1,17 +1,14 @@
-import click
+import typer
 import asyncio
 from services.ec2 import EC2
 from services.rds import RDS
 
 
-@click.group()
-def cli():
-    pass
-
-
-@cli.group()
-def ec2():
-    pass
+app = typer.Typer()
+ec2 = typer.Typer()
+rds = typer.Typer()
+app.add_typer(ec2, name="ec2")
+app.add_typer(rds, name="rds")
 
 
 @ec2.command(name="show")
@@ -20,23 +17,16 @@ def ec2_show():
     run(ec2.show())
 
 
-@cli.group()
-def rds():
-    pass
+@ec2.command()
+def list_vpcs():
+    ec2 = EC2()
+    run(ec2.list_vpcs())
 
 
 @rds.command(name="show")
-@click.option(
-    "--columns",
-    default="region,proj,engine,type",
-    help="valid columns: region, proj, engine, type, id",
-)
-def rds_show(columns: str):
-    columns = columns.split(",")
-    if not columns:
-        columns = ["region", "proj", "engine", "type"]
+def rds_show():
     rds = RDS()
-    run(rds.show(columns))
+    run(rds.show())
 
 
 def run(coro):
@@ -47,4 +37,4 @@ def run(coro):
 
 
 if __name__ == "__main__":
-    cli()
+    app()
